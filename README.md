@@ -186,15 +186,20 @@ Expected flow:
 The web dashboard is designed to feel clean, minimal, and production-friendly. Once the app is running, open the local UI to inspect prompt analysis, quality scores, stress-test findings, and hardened prompt output in a single workspace.
 
 ### Part-1 Video
-
-<video src="./demo/prompt-inspector-demo.mp4" controls width="720">
-</video>
+<div>
+  <video src="./demo/prompt-inspector-demo.mp4" controls width="720" style="max-width: 100%; height: auto;" preload="metadata">
+  </video>
+</div>
 
 [Initial prompt processing - part 1](./demo/prompt-inspector-demo.mp4)
 
 ### Part-2 Video
-<video src="./demo/prompt-inspector demo_part2.mp4" controls width="720">
+
+<div>
+<video src="./demo/prompt-inspector-demo.mp4" controls width="720" style="max-width: 100%; height: auto;" preload="metadata">
+  Your browser does not support the video tag.
 </video>
+</div>
 
 [Final Output - part 2](./demo/prompt-inspector%20demo_part2.mp4)
 
