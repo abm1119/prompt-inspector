@@ -1,7 +1,3 @@
-
-
-https://github.com/user-attachments/assets/3dcbdafc-9a1b-4bde-8ffd-05641dc3694d
-
 # Prompt Inspector
 
 <div align="center">
