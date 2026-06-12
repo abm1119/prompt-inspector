@@ -1,3 +1,7 @@
+
+
+https://github.com/user-attachments/assets/3dcbdafc-9a1b-4bde-8ffd-05641dc3694d
+
 # Prompt Inspector
 
 <div align="center">
@@ -186,20 +190,14 @@ Expected flow:
 The web dashboard is designed to feel clean, minimal, and production-friendly. Once the app is running, open the local UI to inspect prompt analysis, quality scores, stress-test findings, and hardened prompt output in a single workspace.
 
 ### Part-1 Video
-<div>
-  <video src="./demo/prompt-inspector-demo.mp4" controls width="720" style="max-width: 100%; height: auto;" preload="metadata">
-  </video>
-</div>
+
+https://github.com/user-attachments/assets/9b58b35e-0491-45a5-95b1-1a7898da1d20
 
 [Initial prompt processing - part 1](./demo/prompt-inspector-demo.mp4)
 
 ### Part-2 Video
 
-<div>
-<video src="./demo/prompt-inspector-demo.mp4" controls width="720" style="max-width: 100%; height: auto;" preload="metadata">
-  Your browser does not support the video tag.
-</video>
-</div>
+https://github.com/user-attachments/assets/3f074c3f-05dd-484a-bc73-13d7d0f7c0b0
 
 [Final Output - part 2](./demo/prompt-inspector%20demo_part2.mp4)
 
