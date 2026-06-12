@@ -8,7 +8,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-PRIMARY_MODEL = "llama-3.3-70b-versatile"
+PRIMARY_MODEL = "meta-llama/llama-4-scout-17b-16e-instruct"
 FALLBACK_MODEL = "llama-3.1-8b-instant"
 BASE_URL = "https://api.groq.com/openai/v1"
 

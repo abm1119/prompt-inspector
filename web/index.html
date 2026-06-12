@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Prompt Inspector UI</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <img class="logo" src="inspector_ant.svg" alt="Prompt Inspector logo" />
+      <div>
+        <div class="title">Prompt Inspector</div>
+        <div class="subtitle">A sharper workspace for prompt analysis, hardening and export.</div>
+      </div>
+    </div>
+    <div class="meta">
+      <span class="chip">CLI + UI</span>
+      <span class="chip accent">Live pipeline</span>
+      <span class="pill" id="statusPill">Idle</span>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="hero card">
+      <div>
+        <p class="eyebrow">Prompt quality suite</p>
+        <h1>Audit prompts with clarity, confidence, and clean export paths.</h1>
+        <p class="lead">Run analysis, scoring, vulnerability checks, stress testing and hardened prompt generation from one polished workspace.</p>
+      </div>
+      <div class="hero-badges">
+        <article class="mini-card"><strong>4</strong><span>Quality stages</span></article>
+        <article class="mini-card"><strong>1</strong><span>Export-ready report</span></article>
+        <article class="mini-card"><strong>0</strong><span>Manual stitching</span></article>
+      </div>
+    </section>
+
+    <section class="workspace-grid">
+      <article class="card panel-input">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Step 1</p>
+            <h2>Input prompt</h2>
+          </div>
+          <span class="soft-tag">Ready to inspect</span>
+        </div>
+        <div class="grid">
+          <label class="field">
+            <span>Prompt</span>
+            <textarea id="prompt" placeholder="Paste your prompt here to analyze structure, quality, and risk..."></textarea>
+          </label>
+          <aside class="side">
+            <div class="actions">
+              <button id="runBtn" class="primary">Inspect prompt</button>
+              <button id="clearBtn" class="ghost">Clear</button>
+            </div>
+            <div class="hint-card">
+              <h3>What happens next</h3>
+              <p>Analyze → improve → stress test → export, all in one flow.</p>
+            </div>
+            <div class="progress" id="progress" hidden>
+              <div class="bar"></div>
+              <div class="progressText">Running the inspection pipeline...</div>
+            </div>
+            <div class="error" id="error" hidden></div>
+          </aside>
+        </div>
+      </article>
+
+    </section>
+
+    <section class="card" id="resultsCard" hidden>
+      <div class="splitHeader">
+        <div>
+          <p class="eyebrow">Step 2</p>
+          <h2>Results</h2>
+          <p class="muted" style="margin:6px 0 0; font-size:12px;">Review the analysis, scoring deltas, vulnerability findings, and hardened prompt in one premium dashboard.</p>
+        </div>
+        <div class="export">
+          <button id="copyExport" class="small">Copy export path</button>
+          <a id="openExport" class="small" href="#" target="_blank" rel="noreferrer">Open export folder</a>
+        </div>
+      </div>
+      <div class="result-summary">
+        <span class="chip">Live analysis</span>
+        <span class="chip">Scoring deltas</span>
+        <span class="chip accent">Export-ready</span>
+      </div>
+
+      <div class="tabs" role="tablist" aria-label="Result tabs">
+        <button class="tab active" data-tab="overview" role="tab" aria-selected="true">Overview</button>
+        <button class="tab" data-tab="scoring" role="tab" aria-selected="false">Scoring</button>
+        <button class="tab" data-tab="vulns" role="tab" aria-selected="false">Vulnerabilities</button>
+        <button class="tab" data-tab="stress" role="tab" aria-selected="false">Stress Test</button>
+        <button class="tab" data-tab="prompt" role="tab" aria-selected="false">Hardened Prompt</button>
+        <button class="tab" data-tab="raw" role="tab" aria-selected="false">Raw JSON</button>
+      </div>
+
+      <div class="tabPanel" id="tab-overview"></div>
+      <div class="tabPanel" id="tab-scoring" hidden></div>
+      <div class="tabPanel" id="tab-vulns" hidden></div>
+      <div class="tabPanel" id="tab-stress" hidden></div>
+      <div class="tabPanel" id="tab-prompt" hidden></div>
+      <div class="tabPanel" id="tab-raw" hidden></div>
+    </section>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
+

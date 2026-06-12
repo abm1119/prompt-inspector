@@ -1,0 +1,22 @@
+[
+    {
+        "name": "Fidelity to prompt",
+        "description": "Does the generated artwork match the description?",
+        "weight": 0.3
+    },
+    {
+        "name": "Artistic quality",
+        "description": "Does the artwork demonstrate skill and creativity?",
+        "weight": 0.2
+    },
+    {
+        "name": "Technical quality",
+        "description": "Does the artwork meet the specified technical requirements?",
+        "weight": 0.2
+    },
+    {
+        "name": "Aesthetic appeal",
+        "description": "Does the artwork have a pleasing and engaging aesthetic?",
+        "weight": 0.3
+    }
+]

@@ -1,0 +1,17 @@
+[
+    {
+        "name": "Roadmap Completeness",
+        "description": "The roadmap covers all necessary aspects of the chosen technology",
+        "weight": 30.0
+    },
+    {
+        "name": "User Engagement",
+        "description": "The user is actively engaged and invested in the learning process",
+        "weight": 20.0
+    },
+    {
+        "name": "Roadmap Effectiveness",
+        "description": "The roadmap is effective in helping the user achieve their goals and objectives",
+        "weight": 50.0
+    }
+]

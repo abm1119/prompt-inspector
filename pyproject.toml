@@ -11,4 +11,7 @@ dependencies = [
     "rich>=15.0.0",
     "textstat>=0.7.13",
     "tenacity>=9.0.0",
+    "fastapi>=0.136.3",
+    "uvicorn>=0.29.0",
 ]
+

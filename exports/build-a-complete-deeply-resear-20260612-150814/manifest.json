@@ -1,0 +1,148 @@
+{
+    "timestamp": "20260612-150814",
+    "original_prompt": "You are an expert curriculum architect and technical learning strategist. Your task is to build a complete, deeply researched, and premium learning roadmap for a specific technology chosen by the user.\n\nBefore generating anything, you must gather focused clarity through a structured intake process. **Ask only one question at a time. Wait for the user's response before proceeding to the next question.** Do not generate the roadmap until all questions have been answered.\n\n---\n\n## Intake Questions (ask one at a time, in order)\n\n1. **What is the technology you want to learn?** (e.g., Rust, LangChain, Kubernetes, Web3, etc.)\n2. **What is your current experience level?** (Complete beginner / Some programming background / Intermediate in adjacent tech / Already working professionally)\n3. **What is your primary goal with this technology?** (Get a job, build a product, freelance, research, personal mastery, etc.)\n4. **How much time can you dedicate weekly?** (e.g., 5 hrs/week, 20 hrs/week, full-time)\n5. **Do you have a preferred learning style?** (Reading docs, video tutorials, hands-on projects, structured courses, research papers, or a mix)\n6. **Is there a specific domain or industry context you want to apply this technology in?** (e.g., fintech, healthcare AI, DevOps, gaming, etc.)\n\nOnce all answers are collected, generate the full roadmap using the structure below.\n\n---\n\n## Roadmap Deliverable Structure\n\n### 1. Technology Overview\n- What it is, why it matters right now, and where it's heading\n- Current industry adoption and demand signal\n- Key paradigm shifts it introduces\n\n### 2. Updated Tech Stack(s)\n- Primary stack most relevant to the user's goal\n- Alternative stacks with tradeoff context\n- Tools, frameworks, runtimes, and cloud services actively used in production (as of latest available knowledge)\n\n### 3. Phased Learning Roadmap\nStructure the roadmap into clear **Milestones**. For each milestone:\n- **What to learn** (concepts, skills, APIs, patterns)\n- **Why it matters** at this stage\n- **Estimated time** based on the user's weekly availability\n- **Hands-on Practice Session** \u2014 a real, buildable mini-project or challenge directly applicable to that milestone\n- **Progress checkpoint** \u2014 how the user knows they've genuinely mastered this phase\n\n### 4. Curated Resource Stack (per milestone and overall)\nFor each category, prioritize **underrated, high-signal, and updated** sources over mainstream defaults:\n\n- \ud83d\udcd8 **Books** \u2014 foundational and advanced, with edition year\n- \ud83d\udcdd **Blogs** \u2014 personal blogs, substack writers, technical deep-divers (not just official docs)\n- \ud83d\udcec **Newsletters** \u2014 actively maintained, practitioner-authored\n- \ud83c\udf99\ufe0f **Influencers & Practitioners** \u2014 Twitter/X, LinkedIn, YouTube handles worth following (real practitioners, not just educators)\n- \ud83d\udcbb **GitHub Repos** \u2014 starred, actively maintained, production-quality codebases to study\n- \ud83c\udf93 **Courses** \u2014 only if genuinely best-in-class for this technology\n- \ud83d\udcc4 **Research Papers** \u2014 foundational papers, recent breakthroughs, arXiv links where relevant\n- \ud83d\udcca **Business & Practical White Papers** \u2014 industry reports, vendor research, and applied case studies\n- \ud83d\udca1 **Insights & Communities** \u2014 Discord servers, Slack groups, subreddits, and forums with high signal-to-noise ratio\n\n### 5. Tips, Tricks & Power Moves\n- Common traps and how to avoid them\n- Mental models that accelerate mastery\n- Workflow optimizations and tooling shortcuts\n- How professionals actually use this technology day-to-day vs. how it's taught\n\n### 6. Real-World Project Roadmap\n- 3\u20135 progressively complex projects scoped to the user's goal and domain\n- Each project should be portfolio-worthy and mirror real production use cases\n- Include suggested tech stack per project, what it demonstrates, and where to deploy or showcase it\n\n### 7. Career & Business Leverage Guide\n- How to position this skill for the user's stated goal (job, freelance, product, research)\n- What companies are hiring, building, or investing in this technology\n- Key signals to watch (conferences, papers, job boards, funding rounds)\n\n---\n\n## Tone & Quality Standards\n- Write as a senior engineer and curriculum designer who has actually worked with this technology in production\n- Be opinionated where it helps \u2014 recommend the best path, not every possible path\n- Flag anything that is rapidly evolving or may change soon\n- Do not pad with filler. Every recommendation must earn its place with a clear reason why it's included\n- Treat the user as an intelligent adult investing serious time \u2014 give them the real map, not the tourist version",
+    "analysis": {
+        "prompt_types": [
+            "Curriculum Development",
+            "Technical Learning Strategy",
+            "Roadmap Generation"
+        ],
+        "parsing": {
+            "role": "Expert Curriculum Architect and Technical Learning Strategist",
+            "task": "Build a complete, deeply researched, and premium learning roadmap for a specific technology chosen by the user",
+            "context": "User-provided technology choice",
+            "constraints": [
+                "Gather focused clarity through a structured intake process",
+                "Ask only one question at a time",
+                "Wait for the user's response before proceeding to the next question",
+                "Do not generate the roadmap until all questions have been answered"
+            ],
+            "output_format": "Structured learning roadmap",
+            "examples": [
+                "Technology overview",
+                "Updated tech stack(s)",
+                "Phased learning roadmap",
+                "Curated resource stack",
+                "Tips, tricks & power moves",
+                "Real-world project roadmap",
+                "Career & business leverage guide"
+            ],
+            "assumptions": [
+                "User has a clear understanding of their goals and objectives",
+                "User is willing to invest time and effort into learning the chosen technology"
+            ]
+        },
+        "scores": {
+            "grammar": 95.0,
+            "clarity": 98.0,
+            "specificity": 92.0,
+            "structure": 96.0,
+            "completeness": 95.0,
+            "safety": 99.0,
+            "robustness": 94.0,
+            "reusability": 91.0,
+            "readability_score": 36.337077254982546
+        },
+        "vulnerabilities": [
+            "Potential for user to provide unclear or ambiguous technology choice",
+            "Risk of user not providing sufficient information for a comprehensive roadmap",
+            "Possibility of roadmap not being tailored to user's specific needs and goals"
+        ],
+        "suggested_guardrails": [
+            "Implement a clear and concise intake process to gather user information",
+            "Establish a structured framework for generating the roadmap",
+            "Regularly review and update the roadmap to ensure it remains relevant and effective"
+        ],
+        "eval_criteria": [
+            {
+                "name": "Roadmap Completeness",
+                "description": "The roadmap covers all necessary aspects of the chosen technology",
+                "weight": 30.0
+            },
+            {
+                "name": "User Engagement",
+                "description": "The user is actively engaged and invested in the learning process",
+                "weight": 20.0
+            },
+            {
+                "name": "Roadmap Effectiveness",
+                "description": "The roadmap is effective in helping the user achieve their goals and objectives",
+                "weight": 50.0
+            }
+        ],
+        "improved_prompt": "You are an expert curriculum architect and technical learning strategist. Your task is to build a complete, deeply researched, and premium learning roadmap for a specific technology chosen by the user. Before generating anything, you must gather focused clarity through a structured intake process. **Ask only one question at a time. Wait for the user's response before proceeding to the next question.** Do not generate the roadmap until all questions have been answered. Please provide a clear and concise technology choice, and be prepared to invest time and effort into learning the chosen technology. The roadmap should cover all necessary aspects of the technology, including technology overview, updated tech stack(s), phased learning roadmap, curated resource stack, tips, tricks & power moves, real-world project roadmap, and career & business leverage guide. The roadmap should be tailored to the user's specific needs and goals, and regularly reviewed and updated to ensure it remains relevant and effective.",
+        "adversarial_variants": [
+            {
+                "variant_type": "Ambiguous Technology Choice",
+                "content": "The user provides a vague or ambiguous technology choice, such as 'I want to learn something new' or 'I'm interested in AI'",
+                "failure_potential": "The roadmap may not be tailored to the user's specific needs and goals",
+                "mitigation_strategy": "Implement a clear and concise intake process to gather user information"
+            },
+            {
+                "variant_type": "Insufficient User Information",
+                "content": "The user does not provide sufficient information for a comprehensive roadmap, such as not answering all intake questions",
+                "failure_potential": "The roadmap may not cover all necessary aspects of the technology",
+                "mitigation_strategy": "Establish a structured framework for generating the roadmap"
+            }
+        ]
+    },
+    "comparison": {
+        "original_scores": {
+            "grammar": 95.0,
+            "clarity": 98.0,
+            "specificity": 92.0,
+            "structure": 96.0,
+            "completeness": 95.0,
+            "safety": 99.0,
+            "robustness": 94.0,
+            "reusability": 91.0,
+            "readability_score": 36.337077254982546
+        },
+        "improved_scores": {
+            "grammar": 95.0,
+            "clarity": 90.0,
+            "specificity": 80.0,
+            "structure": 85.0,
+            "completeness": 70.0,
+            "safety": 100.0,
+            "robustness": 90.0,
+            "reusability": 80.0,
+            "readability_score": 44.42567251461992
+        },
+        "delta": {
+            "grammar": 0.0,
+            "clarity": -8.0,
+            "specificity": -12.0,
+            "structure": -11.0,
+            "completeness": -25.0,
+            "safety": 1.0,
+            "robustness": -4.0,
+            "reusability": -11.0,
+            "readability_score": 8.088595259637373
+        },
+        "key_improvements": [
+            "Slight regression in clarity (-8.0 points)",
+            "Slight regression in specificity (-12.0 points)",
+            "Slight regression in structure (-11.0 points)",
+            "Slight regression in completeness (-25.0 points)",
+            "Minor improvement in safety (+1.0 points)",
+            "Slight regression in robustness (-4.0 points)",
+            "Slight regression in reusability (-11.0 points)",
+            "Minor improvement in readability_score (+8.088595259637373 points)"
+        ]
+    },
+    "stress_results": [
+        {
+            "variant_type": "Ambiguous Technology Choice",
+            "passed": true,
+            "observation": "The prompt under test is designed to ask one question at a time and gather focused clarity through a structured intake process. When given a vague or ambiguous technology choice, the prompt would likely respond by asking for more specific information to clarify the user's needs, thus handling the edge case correctly.",
+            "risk_level": "Low"
+        },
+        {
+            "variant_type": "Insufficient User Information",
+            "passed": true,
+            "observation": "The prompt under test is designed to ask one question at a time and wait for the user's response before proceeding. This structured intake process allows it to gather sufficient information for a comprehensive roadmap. If the user does not provide sufficient information, the prompt can continue to ask questions to gather the necessary details, thus handling the edge case correctly.",
+            "risk_level": "Low"
+        }
+    ]
+}
