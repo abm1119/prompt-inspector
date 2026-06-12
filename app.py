@@ -14,6 +14,7 @@ from src.analyzer import analyze_prompt
 from src.improver import run_improvement_cycle
 from src.stress_tester import run_stress_test
 from src.exporter import export_artifacts
+from src.optimizer import optimize_prompt
 
 
 # Minimal local API to wrap existing CLI pipeline.
@@ -58,11 +59,37 @@ class InspectResponse(BaseModel):
     analysis: Dict[str, Any]
     comparison: Dict[str, Any]
     stress_results: list
+    optimizer: Dict[str, Any]
+
+
+class OptimizeRequest(BaseModel):
+    prompt: str
+
+
+class OptimizeResponse(BaseModel):
+    request_id: str
+    result: Dict[str, Any]
 
 
 @app.get("/health")
 def health():
     return {"status": "ok"}
+
+
+@app.post("/api/optimize", response_model=OptimizeResponse)
+def optimize(req: OptimizeRequest):
+    prompt = (req.prompt or "").strip()
+    if not prompt:
+        raise HTTPException(status_code=400, detail="prompt is required")
+
+    result = optimize_prompt(prompt)
+    if not result:
+        raise HTTPException(status_code=500, detail="optimization failed")
+
+    return OptimizeResponse(
+        request_id=str(uuid.uuid4()),
+        result=result.model_dump(),
+    )
 
 
 @app.post("/api/inspect", response_model=InspectResponse)
@@ -78,6 +105,7 @@ def inspect(req: InspectRequest):
     comparison = run_improvement_cycle(prompt, analysis)
 
     stress_results = run_stress_test(analysis.improved_prompt, analysis.adversarial_variants)
+    optimizer = optimize_prompt(prompt) or {}
 
     export_path = export_artifacts(prompt, analysis, comparison, stress_results)
 
@@ -89,6 +117,7 @@ def inspect(req: InspectRequest):
         analysis=analysis.model_dump(),
         comparison=comparison.model_dump(),
         stress_results=[s.model_dump() for s in (stress_results or [])],
+        optimizer=optimizer.model_dump() if hasattr(optimizer, 'model_dump') else {},
     )
 
 

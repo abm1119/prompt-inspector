@@ -15,6 +15,7 @@ const panels = {
   vulns: $('#tab-vulns'),
   stress: $('#tab-stress'),
   prompt: $('#tab-prompt'),
+  optimizer: $('#tab-optimizer'),
   raw: $('#tab-raw'),
 };
 
@@ -174,6 +175,29 @@ function renderPrompt(data){
   });
 }
 
+function renderOptimizer(data){
+  const result = data.optimizer || {};
+  const steps = (result.steps || []).map(s => `<li><strong>${escapeHtml(s.name)}</strong>: ${escapeHtml(s.explanation)}</li>`).join('');
+  panels.optimizer.innerHTML = `
+    <div class="result-kpis">
+      <article class="mini-card"><strong>1</strong><span>Lean rewrite</span></article>
+      <article class="mini-card"><strong>${(result.steps || []).length}</strong><span>Optimization steps</span></article>
+    </div>
+    <div class="kv">
+      <div class="k">Summary</div><div class="v">${escapeHtml(result.summary || 'No summary returned.')}</div>
+      <div class="k">Why it is better</div><div class="v">${escapeHtml(result.why_better || 'No note returned.')}</div>
+    </div>
+    <div style="margin-top:14px">
+      <div class="muted" style="font-size:12px;margin-bottom:8px">Optimized prompt</div>
+      <div class="pre">${escapeHtml(result.optimized_prompt || '')}</div>
+    </div>
+    <div style="margin-top:14px">
+      <div class="muted" style="font-size:12px;margin-bottom:8px">Steps</div>
+      <ul class="list">${steps || '<li class="muted">No optimization steps returned.</li>'}</ul>
+    </div>
+  `;
+}
+
 function renderRaw(data){
   panels.raw.innerHTML = `
     <div style="display:flex;justify-content:flex-end;gap:10px;margin-bottom:10px">
@@ -245,6 +269,7 @@ async function runInspect(){
     renderVulns(data);
     renderStress(data);
     renderPrompt(data);
+    renderOptimizer(data);
     renderRaw(data);
 
     setOpenExportLink(data.export_path);

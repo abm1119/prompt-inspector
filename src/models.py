@@ -47,3 +47,13 @@ class ComparisonReport(BaseModel):
     improved_scores: QualityScores
     delta: Dict[str, float]
     key_improvements: List[str]
+
+class OptimizerStep(BaseModel):
+    name: str
+    explanation: str
+
+class OptimizerResult(BaseModel):
+    summary: str
+    optimized_prompt: str
+    why_better: str
+    steps: List[OptimizerStep]

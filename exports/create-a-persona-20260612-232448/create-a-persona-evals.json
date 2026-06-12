@@ -1,0 +1,22 @@
+[
+    {
+        "name": "Persona Completeness",
+        "description": "Does the persona include relevant details such as goals, motivations, and behaviors?",
+        "weight": 0.3
+    },
+    {
+        "name": "CRM Contextualization",
+        "description": "Is the persona tailored to the specific CRM application and its features?",
+        "weight": 0.2
+    },
+    {
+        "name": "Bias Mitigation",
+        "description": "Does the persona creation process account for potential biases and ensure diverse perspectives?",
+        "weight": 0.2
+    },
+    {
+        "name": "Practical Applicability",
+        "description": "Is the persona practical and applicable for sales and business development teams?",
+        "weight": 0.3
+    }
+]

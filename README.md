@@ -11,22 +11,22 @@
   <img alt="LLM Ready" src="https://img.shields.io/badge/LLM-Groq%20Ready-8A2BE2">
 </div>
 
-Prompt Inspector is a prompt quality, hardening, and adversarial resilience toolkit for LLM-powered applications. It combines a CLI workflow, a polished FastAPI web interface, and export-ready artifacts to help you analyze prompts, improve them, stress-test them, and review the results in one place.
+Prompt Inspector is a simple, friendly tool that helps you test, improve, and understand AI prompts without needing technical expertise. You can paste a prompt, see what is strong or weak about it, make it safer and clearer, and export the result for later use.
 
 ---
 
 ## Why it matters
 
-Prompt Inspector is built for teams and builders who want to ship safer, clearer, and more resilient LLM prompts without guesswork. It turns prompt design from a trial-and-error exercise into a measurable workflow.
+Prompt Inspector is built for anyone who wants better AI results without guesswork. It helps you turn a rough prompt into something clearer, safer, and more reliable in just a few steps.
 
 ## What this project does
 
-Prompt Inspector helps you answer four important questions about a prompt:
+Prompt Inspector helps you answer four simple questions about a prompt:
 
-1. Is the prompt well-structured and understandable?
-2. Where are its weaknesses, risks, or blind spots?
-3. How much better can it become after hardening?
-4. Will it hold up under adversarial or ambiguous inputs?
+1. Is it easy to understand?
+2. What parts are weak or risky?
+3. How can it be improved?
+4. Will it still work if the input is confusing or tricky?
 
 It produces:
 - structured prompt analysis

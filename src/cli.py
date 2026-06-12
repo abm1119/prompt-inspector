@@ -9,6 +9,7 @@ from src.analyzer import analyze_prompt
 from src.improver import run_improvement_cycle
 from src.exporter import export_artifacts
 from src.stress_tester import run_stress_test
+from src.optimizer import optimize_prompt
 
 console = Console()
 
@@ -46,15 +47,19 @@ def run():
             console.print("[red]Analysis failed.[/red]")
             return
 
-        # Step 2: Improvement Cycle
+        # Step 2: Prompt Optimizer
+        progress.add_task(description="Optimizing prompt structure and intent...", total=None)
+        optimizer = optimize_prompt(prompt)
+
+        # Step 3: Improvement Cycle
         progress.add_task(description="Iteratively improving & re-scoring...", total=None)
         comparison = run_improvement_cycle(prompt, analysis)
 
-        # Step 3: Stress Testing
+        # Step 4: Stress Testing
         progress.add_task(description="Running adversarial stress tests...", total=None)
         stress_results = run_stress_test(analysis.improved_prompt, analysis.adversarial_variants)
 
-        # Step 4: Export
+        # Step 5: Export
         progress.add_task(description="Generating artifacts...", total=None)
         export_path = export_artifacts(prompt, analysis, comparison, stress_results)
 
@@ -127,7 +132,17 @@ def run():
             border_style="red"
         ))
 
-    # 5. Improved Prompt Preview
+    # 5. Optimizer Summary
+    if optimizer:
+        console.print(Panel(
+            f"[bold cyan]Summary:[/bold cyan] {optimizer.summary}\n\n"
+            f"[bold yellow]Why it is better:[/bold yellow] {optimizer.why_better}\n\n"
+            + "\n".join(f"• {step.name}: {step.explanation}" for step in optimizer.steps),
+            title="[bold magenta]Prompt Optimizer[/bold magenta]",
+            border_style="magenta"
+        ))
+
+    # 6. Improved Prompt Preview
     console.print(Panel(
         Markdown(analysis.improved_prompt[:1200] + ("\n\n[dim]... (truncated for preview)[/dim]" if len(analysis.improved_prompt) > 1200 else "")),
         title="[bold green]Hardened Prompt Preview[/bold green]",

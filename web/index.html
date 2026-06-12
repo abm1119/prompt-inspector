@@ -25,9 +25,9 @@
   <main class="container">
     <section class="hero card">
       <div>
-        <p class="eyebrow">Prompt quality suite</p>
-        <h1>Audit prompts with clarity, confidence, and clean export paths.</h1>
-        <p class="lead">Run analysis, scoring, vulnerability checks, stress testing and hardened prompt generation from one polished workspace.</p>
+        <p class="eyebrow">Simple AI prompt assistant</p>
+        <h1>Make your AI instructions clearer, safer, and more effective.</h1>
+        <p class="lead">Paste any prompt, see what is working, improve it with smart suggestions, and save the result for future use — no technical background required.</p>
       </div>
       <div class="hero-badges">
         <article class="mini-card"><strong>4</strong><span>Quality stages</span></article>
@@ -52,12 +52,12 @@
           </label>
           <aside class="side">
             <div class="actions">
-              <button id="runBtn" class="primary">Inspect prompt</button>
+              <button id="runBtn" class="primary">Check my prompt</button>
               <button id="clearBtn" class="ghost">Clear</button>
             </div>
             <div class="hint-card">
               <h3>What happens next</h3>
-              <p>Analyze → improve → stress test → export, all in one flow.</p>
+              <p>Paste your prompt → review the results → improve it → save the final version.</p>
             </div>
             <div class="progress" id="progress" hidden>
               <div class="bar"></div>
@@ -94,6 +94,7 @@
         <button class="tab" data-tab="vulns" role="tab" aria-selected="false">Vulnerabilities</button>
         <button class="tab" data-tab="stress" role="tab" aria-selected="false">Stress Test</button>
         <button class="tab" data-tab="prompt" role="tab" aria-selected="false">Hardened Prompt</button>
+        <button class="tab" data-tab="optimizer" role="tab" aria-selected="false">Prompt Optimizer</button>
         <button class="tab" data-tab="raw" role="tab" aria-selected="false">Raw JSON</button>
       </div>
 
@@ -102,6 +103,7 @@
       <div class="tabPanel" id="tab-vulns" hidden></div>
       <div class="tabPanel" id="tab-stress" hidden></div>
       <div class="tabPanel" id="tab-prompt" hidden></div>
+      <div class="tabPanel" id="tab-optimizer" hidden></div>
       <div class="tabPanel" id="tab-raw" hidden></div>
     </section>
   </main>
