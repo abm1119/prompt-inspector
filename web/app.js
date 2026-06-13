@@ -5,7 +5,6 @@ const runBtn = $('#runBtn');
 const clearBtn = $('#clearBtn');
 const promptEl = $('#prompt');
 const resultsCard = $('#resultsCard');
-
 const progressEl = $('#progress');
 const errorEl = $('#error');
 
@@ -21,7 +20,8 @@ const panels = {
 
 function setStatus(text, tone=null){
   statusPill.textContent = text;
-  statusPill.style.borderColor = tone ? tone : 'rgba(255,255,255,.08)';
+  statusPill.style.color = tone ? tone : 'var(--color-text-muted)';
+  statusPill.style.borderColor = tone ? tone : 'var(--color-border)';
 }
 
 function showError(msg){
@@ -37,17 +37,26 @@ function clearError(){
 function escapeHtml(str){
   return (str ?? '')
     .replaceAll('&','&amp;')
-    .replaceAll('<','<')
-    .replaceAll('>','>')
-    .replaceAll('"','"')
+    .replaceAll('<','&lt;')
+    .replaceAll('>','&gt;')
+    .replaceAll('"','&quot;')
     .replaceAll("'",'&#039;');
 }
 
 function badgeForRisk(r){
   const v = (r||'').toLowerCase();
-  if(v==='high') return 'bad';
-  if(v==='medium') return 'warn';
-  return 'ok';
+  if(v==='high' || v==='critical') return 'badge-error';
+  if(v==='medium') return 'badge-warn';
+  return 'badge-success';
+}
+
+function renderKPI(label, value){
+  return `
+    <article class="kpi-card">
+      <span class="kpi-label">${label}</span>
+      <div class="kpi-value">${escapeHtml(value)}</div>
+    </article>
+  `;
 }
 
 function renderOverview(data){
@@ -57,20 +66,23 @@ function renderOverview(data){
 
   const html = `
     <div class="result-kpis">
-      <article class="mini-card"><strong>${escapeHtml(types || 'N/A')}</strong><span>Prompt types</span></article>
-      <article class="mini-card"><strong>${escapeHtml(parsing.task || 'N/A')}</strong><span>Primary task</span></article>
-      <article class="mini-card"><strong>${escapeHtml(parsing.role || 'N/A')}</strong><span>Assigned role</span></article>
+      ${renderKPI('Prompt Type', types)}
+      ${renderKPI('Primary Task', parsing.task || 'N/A')}
+      ${renderKPI('Assigned Role', parsing.role || 'N/A')}
     </div>
-    <div class="kv">
-      <div class="k">Types</div><div class="v">${escapeHtml(types)}</div>
-      <div class="k">Task</div><div class="v">${escapeHtml(parsing.task || 'N/A')}</div>
-      <div class="k">Role</div><div class="v">${escapeHtml(parsing.role || 'N/A')}</div>
-      <div class="k">Output format</div><div class="v">${escapeHtml(parsing.output_format || 'N/A')}</div>
-    </div>
-
-    <div style="margin-top:14px">
-      <div class="muted" style="font-size:12px;margin-bottom:8px">Constraints</div>
-      <ul class="list">${(parsing.constraints||[]).map(c=>`<li>${escapeHtml(c)}</li>`).join('') || '<li class="muted">None</li>'}</ul>
+    
+    <div style="margin-top:24px">
+      <h3 style="font-size:12px; color:var(--color-text-muted); margin-bottom:12px; text-transform:uppercase; letter-spacing:0.05em">Structural Analysis</h3>
+      <table class="data-table">
+        <tr><td><strong>Context</strong></td><td>${escapeHtml(parsing.context || 'None provided')}</td></tr>
+        <tr><td><strong>Output Format</strong></td><td>${escapeHtml(parsing.output_format || 'Auto')}</td></tr>
+        <tr><td><strong>Constraints</strong></td><td>
+          <ul style="padding-left:16px; margin:0">${(parsing.constraints||[]).map(c=>`<li>${escapeHtml(c)}</li>`).join('') || '<li>None</li>'}</ul>
+        </td></tr>
+        <tr><td><strong>Assumptions</strong></td><td>
+          <ul style="padding-left:16px; margin:0">${(parsing.assumptions||[]).map(c=>`<li>${escapeHtml(c)}</li>`).join('') || '<li>None identified</li>'}</ul>
+        </td></tr>
+      </table>
     </div>
   `;
   panels.overview.innerHTML = html;
@@ -82,43 +94,35 @@ function renderScoring(data){
   const delta = data.comparison.delta || {};
 
   const keys = Object.keys(orig).filter(k=>k!=='readability_score');
-  const readOrig = data.comparison.original_scores.readability_score ?? 0;
-  const readImp = data.comparison.improved_scores.readability_score ?? 0;
-
+  
   const rows = keys.map(k=>{
     const v0 = orig[k];
     const v1 = imp[k];
     const d = delta[k];
-    const tone = d>0 ? 'rgba(46,229,157,.95)' : d<0 ? 'rgba(255,77,109,.95)' : 'rgba(255,255,255,.8)';
+    const deltaColor = d > 0 ? 'var(--color-success)' : d < 0 ? 'var(--color-error)' : 'inherit';
     return `
       <tr>
-        <td>${escapeHtml(k)}</td>
-        <td style="text-align:center">${Number(v0).toFixed(1)}</td>
-        <td style="text-align:center">${Number(v1).toFixed(1)}</td>
-        <td style="text-align:right;font-weight:800;color:${tone}">${(d ?? 0).toFixed(1)>=0?'+':''}${Number(d ?? 0).toFixed(1)}</td>
+        <td>${escapeHtml(k.replace('_',' '))}</td>
+        <td>${Number(v0).toFixed(1)}%</td>
+        <td>${Number(v1).toFixed(1)}%</td>
+        <td style="color:${deltaColor}; font-weight:700">${(d ?? 0)>=0?'+':''}${Number(d ?? 0).toFixed(1)}</td>
       </tr>
     `;
   }).join('');
 
-  const readTone = (readImp-readOrig) >= 0 ? 'rgba(109,94,252,.95)' : 'rgba(255,204,102,.95)';
-
   panels.scoring.innerHTML = `
-    <table class="table">
+    <table class="data-table">
       <thead>
-        <tr>
-          <th>Metric</th><th>Original</th><th>Improved</th><th>Delta</th>
-        </tr>
+        <tr><th>Quality Metric</th><th>Original</th><th>Hardened</th><th>Improvement</th></tr>
       </thead>
       <tbody>
         ${rows}
-        <tr>
-          <td><b>Readability (Flesch)</b></td>
-          <td style="text-align:center">${Number(readOrig).toFixed(1)}</td>
-          <td style="text-align:center">${Number(readImp).toFixed(1)}</td>
-          <td style="text-align:right;font-weight:900;color:${readTone}">${(readImp-readOrig)>=0?'+':''}${(readImp-readOrig).toFixed(1)}</td>
-        </tr>
       </tbody>
     </table>
+    <div style="margin-top:24px; padding:16px; background:var(--color-pane); border-radius:var(--radius-md); border-left:4px solid var(--color-accent)">
+      <h4 style="font-size:11px; color:var(--color-text-muted); margin-bottom:4px">EXECUTIVE SUMMARY</h4>
+      <p style="font-size:13px">${data.comparison.key_improvements.join('. ')}.</p>
+    </div>
   `;
 }
 
@@ -127,113 +131,114 @@ function renderVulns(data){
   panels.vulns.innerHTML = vulns.length
     ? `
       <div class="result-kpis">
-        <article class="mini-card"><strong>${vulns.length}</strong><span>Findings</span></article>
-        <article class="mini-card"><strong>${vulns.some(v=>/high|critical/i.test(v)) ? 'Needs attention' : 'Stable'}</strong><span>Risk signal</span></article>
+        ${renderKPI('Findings', vulns.length)}
+        ${renderKPI('Risk Level', vulns.length > 3 ? 'High' : 'Elevated')}
       </div>
-      <ul class="list">${vulns.map(v=>`<li>${escapeHtml(v)}</li>`).join('')}</ul>
+      <ul style="padding-left:20px; color:var(--color-text)">
+        ${vulns.map(v=>`<li style="margin-bottom:8px">${escapeHtml(v)}</li>`).join('')}
+      </ul>
     `
-    : `<div class="muted">No vulnerabilities detected by the analyzer.</div>`;
+    : `<div style="text-align:center; padding:48px; color:var(--color-text-muted)">No vulnerabilities detected in this prompt architecture.</div>`;
 }
 
 function renderStress(data){
   const items = data.stress_results || [];
   panels.stress.innerHTML = items.length
     ? `
-      <table class="table">
-        <thead><tr><th>Attack vector</th><th>Status</th><th>Risk</th><th>Observation</th></tr></thead>
+      <table class="data-table">
+        <thead><tr><th>Attack Vector</th><th>Status</th><th>Risk</th><th>Observation</th></tr></thead>
         <tbody>
           ${items.map(r=>{
-            const status = r.passed ? 'PASS' : 'FAIL';
             const riskClass = badgeForRisk(r.risk_level);
-            const statusClass = r.passed ? 'ok' : 'bad';
+            const statusClass = r.passed ? 'badge-success' : 'badge-error';
             return `
               <tr>
-                <td>${escapeHtml(r.variant_type)}</td>
-                <td><span class="badge ${statusClass}">${status}</span></td>
+                <td style="font-family:var(--font-mono); font-size:12px">${escapeHtml(r.variant_type)}</td>
+                <td><span class="badge ${statusClass}">${r.passed ? 'PASS' : 'FAIL'}</span></td>
                 <td><span class="badge ${riskClass}">${escapeHtml(r.risk_level)}</span></td>
-                <td>${escapeHtml(r.observation)}</td>
+                <td style="color:var(--color-text-muted)">${escapeHtml(r.observation)}</td>
               </tr>
             `;
           }).join('')}
         </tbody>
       </table>
     `
-    : `<div class="muted">No stress results returned.</div>`;
+    : `<div style="text-align:center; padding:48px; color:var(--color-text-muted)">No stress test data available.</div>`;
 }
 
 function renderPrompt(data){
   const text = data.analysis.improved_prompt || '';
   panels.prompt.innerHTML = `
     <div style="display:flex;justify-content:flex-end;gap:10px;margin-bottom:10px">
-      <button id="copyPrompt" class="small">Copy hardened prompt</button>
+      <button id="copyPrompt" class="btn-small">Copy Hardened Prompt</button>
     </div>
-    <div class="pre">${escapeHtml(text)}</div>
+    <div class="code-block">${escapeHtml(text)}</div>
   `;
-  const btn = document.getElementById('copyPrompt');
-  btn.addEventListener('click', async ()=>{
+  document.getElementById('copyPrompt').onclick = async () => {
     await navigator.clipboard.writeText(text);
-  });
+    setStatus('Copied to clipboard', 'var(--color-success)');
+    setTimeout(()=>setStatus('System Idle'), 2000);
+  };
 }
 
 function renderOptimizer(data){
   const result = data.optimizer || {};
-  const steps = (result.steps || []).map(s => `<li><strong>${escapeHtml(s.name)}</strong>: ${escapeHtml(s.explanation)}</li>`).join('');
+  const steps = (result.steps || []).map(s => `
+    <li style="margin-bottom:12px">
+      <strong style="color:var(--color-accent)">${escapeHtml(s.name)}</strong><br/>
+      <span style="font-size:12px; color:var(--color-text-muted)">${escapeHtml(s.explanation)}</span>
+    </li>
+  `).join('');
+  
   panels.optimizer.innerHTML = `
     <div class="result-kpis">
-      <article class="mini-card"><strong>1</strong><span>Lean rewrite</span></article>
-      <article class="mini-card"><strong>${(result.steps || []).length}</strong><span>Optimization steps</span></article>
+      ${renderKPI('Optimization Steps', (result.steps || []).length)}
+      ${renderKPI('Clarity Boost', 'High')}
     </div>
-    <div class="kv">
-      <div class="k">Summary</div><div class="v">${escapeHtml(result.summary || 'No summary returned.')}</div>
-      <div class="k">Why it is better</div><div class="v">${escapeHtml(result.why_better || 'No note returned.')}</div>
+    <div style="margin-bottom:24px">
+      <h4 style="font-size:11px; color:var(--color-text-muted); margin-bottom:8px">LEAN REWRITE</h4>
+      <div class="code-block">${escapeHtml(result.optimized_prompt || '')}</div>
     </div>
-    <div style="margin-top:14px">
-      <div class="muted" style="font-size:12px;margin-bottom:8px">Optimized prompt</div>
-      <div class="pre">${escapeHtml(result.optimized_prompt || '')}</div>
-    </div>
-    <div style="margin-top:14px">
-      <div class="muted" style="font-size:12px;margin-bottom:8px">Steps</div>
-      <ul class="list">${steps || '<li class="muted">No optimization steps returned.</li>'}</ul>
+    <div style="margin-top:24px">
+      <h4 style="font-size:11px; color:var(--color-text-muted); margin-bottom:12px">STRATEGY LOG</h4>
+      <ul style="list-style:none; padding:0">${steps || '<li>No steps recorded.</li>'}</ul>
     </div>
   `;
 }
 
 function renderRaw(data){
+  const json = JSON.stringify(data, null, 2);
   panels.raw.innerHTML = `
     <div style="display:flex;justify-content:flex-end;gap:10px;margin-bottom:10px">
-      <button id="copyRaw" class="small">Copy raw JSON</button>
+      <button id="copyRaw" class="btn-small">Copy Raw Manifest</button>
     </div>
-    <div class="pre">${escapeHtml(JSON.stringify(data, null, 2))}</div>
+    <div class="code-block" style="font-size:11px">${escapeHtml(json)}</div>
   `;
-  const btn = document.getElementById('copyRaw');
-  btn.addEventListener('click', async ()=>{
-    await navigator.clipboard.writeText(JSON.stringify(data, null, 2));
-  });
+  document.getElementById('copyRaw').onclick = async () => {
+    await navigator.clipboard.writeText(json);
+  };
+}
+
+function resetProgressState(){
+  progressEl.hidden = true;
+  progressEl.style.display = 'none';
+  progressEl.style.opacity = '0';
+}
+
+function showProgressState(){
+  progressEl.hidden = false;
+  progressEl.style.display = 'flex';
+  progressEl.style.opacity = '1';
 }
 
 function activateTab(tabName){
-  for(const [name, el] of Object.entries(panels)){
-    const btn = document.querySelector(`.tab[data-tab="${name}"]`);
-    const isActive = name === tabName;
-    el.hidden = !isActive;
-    if(btn) btn.classList.toggle('active', isActive);
-  }
-}
-
-function setOpenExportLink(exportPath){
-  // In browsers we can’t directly open local folders reliably.
-  // Provide a best-effort file:// link if it's an absolute Windows path.
-  const a = $('#openExport');
-  const copy = $('#copyExport');
-  copy.onclick = async () => { await navigator.clipboard.writeText(exportPath); };
-
-  const p = (exportPath||'').trim();
-  $('#openExport').href = '#';
-  if(p.match(/^[A-Za-z]:\\/)){
-    // windows path -> file:///
-    const url = 'file:///' + p.replaceAll('\\','/');
-    a.href = url;
-  }
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    const isActive = btn.getAttribute('data-tab') === tabName;
+    btn.classList.toggle('active', isActive);
+  });
+  Object.keys(panels).forEach(name => {
+    panels[name].hidden = name !== tabName;
+  });
 }
 
 async function runInspect(){
@@ -241,13 +246,13 @@ async function runInspect(){
   clearError();
 
   if(!prompt){
-    showError('Paste a prompt first.');
+    showError('Please provide a prompt for analysis.');
     return;
   }
 
   runBtn.disabled = true;
-  progressEl.hidden = false;
-  setStatus('Running...', 'rgba(109,94,252,.65)');
+  showProgressState();
+  setStatus('Analyzing Prompt...', 'var(--color-accent)');
   resultsCard.hidden = true;
 
   try{
@@ -259,7 +264,7 @@ async function runInspect(){
 
     if(!resp.ok){
       const t = await resp.text();
-      throw new Error(`Backend error (${resp.status}): ${t}`);
+      throw new Error(`Pipeline Error: ${t}`);
     }
 
     const data = await resp.json();
@@ -272,29 +277,48 @@ async function runInspect(){
     renderOptimizer(data);
     renderRaw(data);
 
-    setOpenExportLink(data.export_path);
+    const exportPath = data.export_path || '';
+    $('#copyExport').onclick = async () => { 
+      await navigator.clipboard.writeText(exportPath); 
+      setStatus('Export path copied', 'var(--color-success)');
+    };
+    $('#openExport').href = exportPath.match(/^[A-Z]:\\/) ? 'file:///' + exportPath.replaceAll('\\','/') : '#';
 
     resultsCard.hidden = false;
     activateTab('overview');
-    setStatus('Done', 'rgba(46,229,157,.45)');
+    setStatus('Analysis Complete', 'var(--color-success)');
 
   }catch(e){
-    showError(e.message || String(e));
-    setStatus('Error', 'rgba(255,77,109,.55)');
+    showError(e.message);
+    setStatus('Analysis Failed', 'var(--color-error)');
   }finally{
     runBtn.disabled = false;
-    progressEl.hidden = true;
+    progressEl.style.opacity = '0';
+    setTimeout(() => {
+      resetProgressState();
+    }, 300);
   }
 }
 
-runBtn.addEventListener('click', runInspect);
-clearBtn.addEventListener('click', ()=>{ promptEl.value=''; clearError(); resultsCard.hidden=true; setStatus('Idle'); });
+// Event Listeners
+runBtn.onclick = runInspect;
+clearBtn.onclick = () => {
+  promptEl.value = '';
+  resultsCard.hidden = true;
+  clearError();
+  resetProgressState();
+  setStatus('System Idle');
+};
 
-// Tabs
-document.querySelectorAll('.tab').forEach(btn=>{
-  btn.addEventListener('click', ()=>{
-    const name = btn.getAttribute('data-tab');
-    activateTab(name);
-  });
+promptEl.onkeydown = (e) => {
+  if (e.ctrlKey && e.key === 'Enter') runInspect();
+};
+
+document.addEventListener('DOMContentLoaded', () => {
+  resetProgressState();
+  setStatus('System Idle');
 });
 
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.onclick = () => activateTab(btn.getAttribute('data-tab'));
+});

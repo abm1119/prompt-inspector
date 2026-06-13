@@ -28,12 +28,8 @@ def compare_scores(original: QualityScores, improved: QualityScores) -> Comparis
     )
 
 def run_improvement_cycle(prompt_text: str, analysis: AnalysisResult) -> ComparisonReport:
-    """Evaluates the improved prompt and compares it to the original."""
-    improved_prompt = analysis.improved_prompt
-    improved_scores = evaluate_quality(improved_prompt)
-    
-    if not improved_scores:
-        # Fallback if evaluation fails
-        improved_scores = analysis.scores 
-        
-    return compare_scores(analysis.scores, improved_scores)
+    """Evaluates the original and improved prompts and compares their quality scores."""
+    original_scores = evaluate_quality(prompt_text) or analysis.scores
+    improved_scores = evaluate_quality(analysis.improved_prompt) or analysis.scores
+
+    return compare_scores(original_scores, improved_scores)

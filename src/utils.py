@@ -46,6 +46,8 @@ def call_llm(system_prompt: str, user_prompt: str, response_model: Type[T], mode
             temperature=0.1,
         )
         content = completion.choices[0].message.content
+        if not content:
+            raise ValueError("Empty response from LLM")
         return response_model.model_validate_json(content)
     except Exception as e:
         if model == PRIMARY_MODEL:

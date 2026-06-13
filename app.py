@@ -117,7 +117,7 @@ def inspect(req: InspectRequest):
         analysis=analysis.model_dump(),
         comparison=comparison.model_dump(),
         stress_results=[s.model_dump() for s in (stress_results or [])],
-        optimizer=optimizer.model_dump() if hasattr(optimizer, 'model_dump') else {},
+        optimizer=optimizer if isinstance(optimizer, dict) else (optimizer.model_dump() if hasattr(optimizer, 'model_dump') else {}),
     )
 
 

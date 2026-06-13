@@ -1,0 +1,22 @@
+[
+    {
+        "name": "Audit Accuracy",
+        "description": "Accuracy of audit findings and recommendations",
+        "weight": 0.3
+    },
+    {
+        "name": "Efficiency",
+        "description": "Efficiency of audit process",
+        "weight": 0.2
+    },
+    {
+        "name": "Completeness",
+        "description": "Completeness of audit findings and decision log",
+        "weight": 0.2
+    },
+    {
+        "name": "Safety",
+        "description": "Safety of audit process and recommendations",
+        "weight": 0.3
+    }
+]
