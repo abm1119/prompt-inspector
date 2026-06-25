@@ -55,6 +55,7 @@
         <div class="header-actions">
           <button id="copyExport" class="btn-small">Copy Path</button>
           <a id="openExport" class="btn-small" href="#" target="_blank">View Artifacts</a>
+          <a id="openReportPage" class="btn-small report-page-link" href="report.html">Full Report</a>
         </div>
       </div>
 
@@ -84,19 +85,25 @@
     <div class="footer-main">
       <div class="footer-copy">Crafted with precision for prompt engineering excellence.</div>
       <div class="footer-links">
-        <span>Documentation</span>
+        <span id="docsLink" role="button" tabindex="0">Documentation</span>
         <span>Support</span>
       </div>
     </div>
     <div class="signature">
-      Made with <span class="heart">❤</span> by
+      Made with <span class="heart">&hearts;</span> by
       <a href="https://www.engrabm.com" target="_blank" rel="noopener noreferrer" class="signature-link">
         Abdul Basit-ABM
       </a>
     </div>
   </footer>
 
+  <div id="docsModal" class="modal" hidden role="dialog" aria-modal="true" aria-label="Prompt Inspector documentation">
+    <div class="modal-content">
+      <iframe id="docsFrame" title="Prompt Inspector documentation" data-src="documentation.html" frameborder="0"></iframe>
+      <button id="closeDocs" class="btn-small" type="button" aria-label="Close documentation">Close</button>
+    </div>
+  </div>
+
   <script src="app.js"></script>
 </body>
 </html>
-

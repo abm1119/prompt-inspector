@@ -35,7 +35,7 @@ function clearError(){
 }
 
 function escapeHtml(str){
-  return (str ?? '')
+  return String(str ?? '')
     .replaceAll('&','&amp;')
     .replaceAll('<','&lt;')
     .replaceAll('>','&gt;')
@@ -44,7 +44,7 @@ function escapeHtml(str){
 }
 
 function badgeForRisk(r){
-  const v = (r||'').toLowerCase();
+  const v = String(r || '').toLowerCase();
   if(v==='high' || v==='critical') return 'badge-error';
   if(v==='medium') return 'badge-warn';
   return 'badge-success';
@@ -89,9 +89,9 @@ function renderOverview(data){
 }
 
 function renderScoring(data){
-  const orig = data.comparison.original_scores;
-  const imp = data.comparison.improved_scores;
-  const delta = data.comparison.delta || {};
+  const orig = data.comparison?.original_scores || {};
+  const imp = data.comparison?.improved_scores || {};
+  const delta = data.comparison?.delta || {};
 
   const keys = Object.keys(orig).filter(k=>k!=='readability_score');
   
@@ -99,16 +99,21 @@ function renderScoring(data){
     const v0 = orig[k];
     const v1 = imp[k];
     const d = delta[k];
-    const deltaColor = d > 0 ? 'var(--color-success)' : d < 0 ? 'var(--color-error)' : 'inherit';
+    const n0 = Number(v0);
+    const n1 = Number(v1);
+    const nd = Number(d ?? 0);
+    const deltaColor = nd > 0 ? 'var(--color-success)' : nd < 0 ? 'var(--color-error)' : 'inherit';
     return `
       <tr>
         <td>${escapeHtml(k.replace('_',' '))}</td>
-        <td>${Number(v0).toFixed(1)}%</td>
-        <td>${Number(v1).toFixed(1)}%</td>
-        <td style="color:${deltaColor}; font-weight:700">${(d ?? 0)>=0?'+':''}${Number(d ?? 0).toFixed(1)}</td>
+        <td>${Number.isFinite(n0) ? n0.toFixed(1) : 'N/A'}%</td>
+        <td>${Number.isFinite(n1) ? n1.toFixed(1) : 'N/A'}%</td>
+        <td style="color:${deltaColor}; font-weight:700">${Number.isFinite(nd) ? `${nd >= 0 ? '+' : ''}${nd.toFixed(1)}` : 'N/A'}</td>
       </tr>
     `;
   }).join('');
+
+  const improvements = data.comparison?.key_improvements || [];
 
   panels.scoring.innerHTML = `
     <table class="data-table">
@@ -121,7 +126,7 @@ function renderScoring(data){
     </table>
     <div style="margin-top:24px; padding:16px; background:var(--color-pane); border-radius:var(--radius-md); border-left:4px solid var(--color-accent)">
       <h4 style="font-size:11px; color:var(--color-text-muted); margin-bottom:4px">EXECUTIVE SUMMARY</h4>
-      <p style="font-size:13px">${data.comparison.key_improvements.join('. ')}.</p>
+      <p style="font-size:13px">${escapeHtml(improvements.join('. ') || 'No improvement summary was provided.')}.</p>
     </div>
   `;
 }
@@ -219,6 +224,16 @@ function renderRaw(data){
   };
 }
 
+function renderInspectionReport(data){
+  renderOverview(data);
+  renderScoring(data);
+  renderVulns(data);
+  renderStress(data);
+  renderPrompt(data);
+  renderOptimizer(data);
+  renderRaw(data);
+}
+
 function resetProgressState(){
   progressEl.hidden = true;
   progressEl.style.display = 'none';
@@ -269,15 +284,9 @@ async function runInspect(){
 
     const data = await resp.json();
 
-    renderOverview(data);
-    renderScoring(data);
-    renderVulns(data);
-    renderStress(data);
-    renderPrompt(data);
-    renderOptimizer(data);
-    renderRaw(data);
+    renderInspectionReport(data);
 
-    const exportPath = data.export_path || '';
+    const exportPath = String(data.export_path || '');
     $('#copyExport').onclick = async () => { 
       await navigator.clipboard.writeText(exportPath); 
       setStatus('Export path copied', 'var(--color-success)');
@@ -298,6 +307,59 @@ async function runInspect(){
       resetProgressState();
     }, 300);
   }
+}
+
+// Documentation modal handling
+const docsLink = document.getElementById('docsLink');
+const docsModal = document.getElementById('docsModal');
+const closeDocs = document.getElementById('closeDocs');
+const docsFrame = document.getElementById('docsFrame');
+
+if (docsLink && docsModal && closeDocs) {
+  docsModal.hidden = true;
+
+  function openDocumentation(){
+    if (docsFrame && !docsFrame.getAttribute('src')) {
+      docsFrame.setAttribute('src', docsFrame.dataset.src || 'documentation.html');
+    }
+    docsModal.hidden = false;
+    document.body.classList.add('modal-open');
+  }
+
+  function closeDocumentation(){
+    docsModal.hidden = true;
+    document.body.classList.remove('modal-open');
+    docsLink.focus();
+  }
+
+  docsLink.addEventListener('click', (e) => {
+    e.preventDefault();
+    openDocumentation();
+  });
+
+  docsLink.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      openDocumentation();
+    }
+  });
+
+  closeDocs.addEventListener('click', (e) => {
+    e.preventDefault();
+    closeDocumentation();
+  });
+
+  docsModal.addEventListener('click', (e) => {
+    if (e.target === docsModal) {
+      closeDocumentation();
+    }
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && !docsModal.hidden) {
+      closeDocumentation();
+    }
+  });
 }
 
 // Event Listeners

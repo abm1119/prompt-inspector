@@ -15,6 +15,13 @@ def format_score(val) -> str:
     except (ValueError, TypeError):
         return "N/A"
 
+def format_delta(val) -> str:
+    """Formats a numeric score delta with an explicit sign."""
+    try:
+        return f"{float(val):+.1f}"
+    except (ValueError, TypeError):
+        return "N/A"
+
 def export_artifacts(original_prompt: str, analysis: AnalysisResult, comparison: ComparisonReport, stress_results: list):
     """
     Exports the analysis results into a premium, well-structured folder of artifacts.
@@ -52,7 +59,7 @@ def export_artifacts(original_prompt: str, analysis: AnalysisResult, comparison:
         avg_orig = sum(v for k, v in analysis.scores.model_dump().items() if isinstance(v, (int, float)) and k != 'readability_score') / 8
         avg_imp = sum(v for k, v in comparison.improved_scores.model_dump().items() if isinstance(v, (int, float)) and k != 'readability_score') / 8
         
-        f.write(f"- **Final Hardened Score:** `{format_score(avg_imp)}/100` (Delta: `{format_score(avg_imp - avg_orig):+}`)\n")
+        f.write(f"- **Final Hardened Score:** `{format_score(avg_imp)}/100` (Delta: `{format_delta(avg_imp - avg_orig)}`)\n")
         f.write(f"- **Readability (Flesch):** `{format_score(comparison.improved_scores.readability_score)}`\n")
         f.write(f"- **Status:** {'✅ Stable & Optimized' if avg_imp > 80 else '⚠️ Needs Further Review'}\n\n")
         
@@ -80,7 +87,7 @@ def export_artifacts(original_prompt: str, analysis: AnalysisResult, comparison:
         f.write("| Quality Dimension | Original | Hardened | Delta |\n")
         f.write("| :--- | :---: | :---: | :---: |\n")
         for k, v in comparison.delta.items():
-            f.write(f"| {k.replace('_',' ').capitalize()} | {format_score(comparison.original_scores.model_dump()[k])} | {format_score(comparison.improved_scores.model_dump()[k])} | {v:+} |\n")
+            f.write(f"| {k.replace('_',' ').capitalize()} | {format_score(comparison.original_scores.model_dump()[k])} | {format_score(comparison.improved_scores.model_dump()[k])} | {format_delta(v)} |\n")
         f.write("\n")
 
         f.write("## 4. Stress Test Results\n")
